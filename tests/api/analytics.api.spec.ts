@@ -60,4 +60,20 @@ test.describe("Analytics API", () => {
     );
     expect(todoCreateEvents.length).toBeGreaterThan(0);
   });
+
+  test("analyticsConsentChange event is recorded", async ({ request }) => {
+    // Act
+    const response = await request.get("/api/analytics/events", {
+      headers: { Authorization: `Basic ${BASIC_AUTH}` },
+    });
+    const events = await response.json();
+    // Assert
+    const consentEvent = events.find(
+      (e: { type: string; email: string }) =>
+        e.type === "analyticsConsentChange" && e.email === process.env.TEST_USER_EMAIL
+    );
+    expect(consentEvent).toBeDefined();
+    expect(consentEvent).toHaveProperty("analyticsConsent");
+  });
+
 });

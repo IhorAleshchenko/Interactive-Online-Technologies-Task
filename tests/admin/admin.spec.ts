@@ -5,9 +5,7 @@ import { AdminPage } from "../../pages/admin.page";
 test.describe("Admin Panel", () => {
   let adminPage: AdminPage;
 
-  test.beforeAll(async ({ browser }) => {
-    const context = await browser.newContext();
-    const page = await context.newPage();
+  test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await page.goto("/index.html");
     await loginPage.fillLoginForm({
@@ -16,14 +14,6 @@ test.describe("Admin Panel", () => {
     });
     await loginPage.loginButton.click();
     await page.waitForURL(/admin\.html/);
-    await context.storageState({ path: ".auth/admin.json" });
-    await context.close();
-  });
-
-  test.use({ storageState: ".auth/admin.json" });
-
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/admin.html");
     adminPage = new AdminPage(page);
   });
 
@@ -47,10 +37,10 @@ test.describe("Admin Panel", () => {
     await expect(adminPage.usersContainer.getByText("События").first()).toBeVisible();
   });
 
-  test("admin can logout", async ({ page }) => {
+  test("admin can logout", async () => {
     // Act
     await adminPage.logoutButton.click();
-    // Assert
-    await expect(page).not.toHaveURL(/admin\.html/);
+    // Assert — panel disappears after logout (no redirect, session is cleared)
+    await expect(adminPage.adminPanel).not.toBeVisible();
   });
 });

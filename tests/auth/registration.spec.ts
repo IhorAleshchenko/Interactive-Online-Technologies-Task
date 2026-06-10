@@ -58,11 +58,11 @@ test("user cannot register with invalid email", async ({ page }) => {
   await registerPage.registerButton.click();
 
   // Assert
-  const validationMessage = await registerPage.emailInput.evaluate(
-    (input: HTMLInputElement) => input.validationMessage
+  const hasTypeMismatch = await registerPage.emailInput.evaluate(
+    (input: HTMLInputElement) => input.validity.typeMismatch
   );
 
-  expect(validationMessage).toContain("@");
+  expect(hasTypeMismatch).toBeTruthy();
 });
 
  test("user cannot register with empty password field", async () => {

@@ -78,4 +78,11 @@ test.describe("Profile", () => {
     const newState = await profilePage.analyticsConsentCheckbox.isChecked();
     expect(newState).toBe(!initialState);
   });
+
+  test("user can logout", async ({ page }) => {
+    // Act
+    await page.getByRole("button", { name: "Выйти из аккаунта" }).click();
+    // Assert
+    await expect(page).toHaveURL(/index\.html/);
+  });
 });

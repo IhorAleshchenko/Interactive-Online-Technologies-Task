@@ -69,14 +69,4 @@ test.describe("Login Tests", () => {
     await expect(page).toHaveURL(/register\.html/);
   });
 
-  test("user can logout", async ({ page }) => {
-    // Arrange
-    await loginPage.fillLoginForm({ email: EMAIL, password: PASSWORD });
-    await loginPage.loginButton.click();
-    await expect(page).toHaveURL(/dashboard\.html/);
-    // Act
-    await page.getByRole("button", { name: "Выйти из аккаунта" }).click();
-    // Assert
-    await expect(page).toHaveURL(/index\.html/);
-  });
 });

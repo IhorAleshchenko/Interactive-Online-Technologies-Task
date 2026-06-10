@@ -4,8 +4,10 @@ import { AdminPage } from "../../pages/admin.page";
 
 test.describe("Admin Panel", () => {
   let adminPage: AdminPage;
-  
-  test.beforeEach(async ({ page }) => {
+
+  test.beforeAll(async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
     const loginPage = new LoginPage(page);
     await page.goto("/index.html");
     await loginPage.fillLoginForm({
@@ -14,6 +16,14 @@ test.describe("Admin Panel", () => {
     });
     await loginPage.loginButton.click();
     await page.waitForURL(/admin\.html/);
+    await context.storageState({ path: ".auth/admin.json" });
+    await context.close();
+  });
+
+  test.use({ storageState: ".auth/admin.json" });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/admin.html");
     adminPage = new AdminPage(page);
   });
 
@@ -33,14 +43,14 @@ test.describe("Admin Panel", () => {
     // Arrange
     await adminPage.userSearch.fill(process.env.TEST_USER_EMAIL!);
     // Assert
-    await expect(adminPage.usersContainer.getByText("Заметки (todos)")).toBeVisible();
-    await expect(adminPage.usersContainer.getByText("События")).toBeVisible();
+    await expect(adminPage.usersContainer.getByText("Заметки (todos)").first()).toBeVisible();
+    await expect(adminPage.usersContainer.getByText("События").first()).toBeVisible();
   });
 
   test("admin can logout", async ({ page }) => {
     // Act
     await adminPage.logoutButton.click();
     // Assert
-    await expect(page).toHaveURL(/admin\.html|\/$/);
+    await expect(page).not.toHaveURL(/admin\.html/);
   });
 });

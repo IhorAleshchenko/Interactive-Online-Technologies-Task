@@ -12,7 +12,6 @@ export class RegisterPage {
   readonly emailInput: Locator;
   readonly genderSelect: Locator;
   readonly passwordInput: Locator;
-  readonly profilePhotoButton: Locator;
   readonly analyticsConsentCheckbox: Locator;
   readonly registerButton: Locator;
   readonly profilePhotoInput: Locator;
@@ -23,7 +22,6 @@ export class RegisterPage {
     this.emailInput = page.getByRole("textbox", { name: "Email" });
     this.genderSelect = page.getByLabel("Пол");
     this.passwordInput = page.getByRole("textbox", { name: "Пароль" });
-    this.profilePhotoButton = page.getByRole("button", {name: "Фотография профиля",});
     this.analyticsConsentCheckbox = page.getByRole("checkbox");
     this.registerButton = page.getByRole("button", { name: "Зарегистрироваться",});
     this.profilePhotoInput = page.locator('[data-ui="register-photo"]');

@@ -38,6 +38,18 @@ test.describe("Login Tests", () => {
     expect(isValueMissing).toBeTruthy();
   });
 
+  test("user cannot login with invalid email format", async () => {
+    // Arrange
+    await loginPage.emailInput.fill("notanemail");
+    // Act
+    await loginPage.loginButton.click();
+    // Assert
+    const hasTypeMismatch = await loginPage.emailInput.evaluate(
+      (input: HTMLInputElement) => input.validity.typeMismatch
+    );
+    expect(hasTypeMismatch).toBeTruthy();
+  });
+
   test("user cannot login with empty password field", async () => {
     // Arrange
     await loginPage.emailInput.fill(EMAIL);
